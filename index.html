@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Aya 💖</title>
+
+<style>
+html, body {
+    margin:0;
+    padding:0;
+    overflow:hidden;
+    font-family: Arial, sans-serif;
+    background:#0d0014;
+    height:100%;
+    color:white;
+}
+
+/* الحاوية الأساسية للنصوص قبل الضغط */
+#introContainer {
+    position: relative;
+    top: 25vh;
+    text-align:center;
+    z-index: 50; /* فوق كل شيء */
+}
+
+/* الأزرار */
+button {
+    margin:15px;
+    padding:15px 30px;
+    font-size:18px;
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
+    position: relative;
+    z-index: 50;
+}
+
+#yes { background:#ff2e88; color:white; }
+#no { background:white; color:#ff2e88; position:absolute; }
+
+/* النصوص المركزية النهائية */
+.centerText {
+    position:absolute;
+    top:40%;
+    width:100%;
+    font-weight:bold;
+    opacity:0;
+    transition:0.5s;
+    text-align:center;
+    z-index:45;
+}
+
+#flashText { font-size:55px; color:#ff66aa; }
+#finalText { font-size:55px; color:#ffd700; }
+
+/* رسالة الاشتياق */
+#loveMessage { 
+    font-size:30px; 
+    color:#ffffff;
+    line-height:1.6em;
+    opacity:0; 
+    text-shadow:
+        0 0 10px rgba(255,255,255,0.8),
+        0 0 20px rgba(255,105,180,0.6),
+        0 0 35px rgba(255,105,180,0.4);
+    z-index:45;
+}
+
+/* القلوب */
+.heart {
+    position:absolute;
+    font-size:20px;
+    animation: float 4s linear infinite;
+    pointer-events:none;
+    z-index:10;
+}
+
+/* الكلمات الصغيرة حول الشاشة */
+.haloText {
+    position:absolute;
+    font-size:16px;
+    font-weight:bold;
+    color:#ffb3da;
+    text-shadow:0 0 8px rgba(255,105,180,0.8);
+    pointer-events:none;
+    animation: fadeFloat 4s linear forwards;
+    z-index:10;
+}
+
+/* أنيميشن */
+@keyframes float {
+    0% { transform: translateY(100vh) rotate(0deg); opacity:1; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity:0; }
+}
+
+@keyframes fadeFloat {
+    0% { transform: translateY(20px); opacity:0; }
+    20% { opacity:1; }
+    100% { transform: translateY(-40px); opacity:0; }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- النصوص الأولية + أزرار -->
+<div id="introContainer">
+    <h1>Aya 💖</h1>
+    <p>Will you be my Valentine? 🌹</p>
+    <button id="yes" onclick="yesClicked()">Yes 💕</button>
+    <button id="no" onmouseover="moveButton()">No 🙈</button>
+</div>
+
+<!-- الأغنية -->
+<audio id="song" preload="auto">
+    <source src="https://assets.mixkit.co/music/preview/mixkit-sweet-valentine-2021.mp3" type="audio/mpeg">
+</audio>
+
+<!-- الرسائل النهائية -->
+<div id="flashText" class="centerText">Oh lucky meee 💘</div>
+<div id="finalText" class="centerText">An angel just said yes 💍💖</div>
+<div id="loveMessage" class="centerText"></div>
+
+<script>
+
+/* تحريك زر No */
+function moveButton(){
+    const btn=document.getElementById("no");
+    btn.style.top=Math.random()*80+"vh";
+    btn.style.left=Math.random()*80+"vw";
+}
+
+/* إظهار وإخفاء */
+function show(id){ document.getElementById(id).style.opacity="1"; }
+function hide(id){ document.getElementById(id).style.opacity="0"; }
+
+/* عند الضغط Yes */
+function yesClicked(){
+
+    // اخفاء النصوص الأولية بالكامل
+    document.getElementById("introContainer").style.display="none";
+
+    // تشغيل الأغنية
+    const song = document.getElementById("song");
+    song.currentTime = 0;
+    song.play().catch(()=>{});
+
+    // ترتيب ظهور النصوص النهائية
+    show("flashText");
+    setTimeout(()=>{
+        hide("flashText");
+        setTimeout(()=>{
+            show("finalText");
+            setTimeout(()=>{
+                hide("finalText");
+                setTimeout(()=>{
+                    // عرض رسالة الاشتياق مع اسم Aya في البداية
+                    const loveDiv = document.getElementById("loveMessage");
+                    loveDiv.innerHTML = `
+Aya 💖<br>
+We don’t always talk.<br>
+But you’re not someone who fades.<br>
+No matter the distance or the silence,<br>
+something about you always stays.`;
+                    show("loveMessage");
+                    startHalo();
+                },500);
+            },2000);
+        },500);
+    },1500);
+
+    startHearts();
+}
+
+/* القلوب */
+function createHeart(){
+    const heart=document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML="💖";
+    heart.style.left=Math.random()*100+"vw";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),4000);
+}
+function startHearts(){ setInterval(createHeart,200); }
+
+/* الكلمات حول الشاشة */
+const haloWords = [
+"ily aya",
+"i miss u aya",
+"my angel",
+"always you",
+"thinking about you",
+"come back soon"
+];
+
+function createHalo(){
+    const text=document.createElement("div");
+    text.classList.add("haloText");
+    text.innerHTML = haloWords[Math.floor(Math.random()*haloWords.length)];
+    text.style.left = Math.random()*100+"vw";
+    text.style.top = Math.random()*100+"vh";
+    document.body.appendChild(text);
+    setTimeout(()=>text.remove(),4000);
+}
+
+function startHalo(){
+    setInterval(createHalo,350);
+}
+
+</script>
+
+</body>
+</html>
